@@ -8,7 +8,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f9f9f7; color: #1a1a18; min-height: 100vh; }
-    .wrap { max-width: 740px; margin: 0 auto; padding: 0 16px 60px; }
+    .wrap { max-width: 600px; margin: 0 auto; padding: 0 16px 60px; }
 
     .hero { padding: 2.5rem 0 1.5rem; border-bottom: 1px solid #e5e3dc; margin-bottom: 1.5rem; }
     .hero-eyebrow { font-size: 12px; color: #888780; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .4rem; }
@@ -19,31 +19,18 @@
     .day-tab { padding: 6px 16px; border: 1px solid #ccc; border-radius: 8px; font-size: 13px; cursor: pointer; background: #fff; color: #666; transition: all .15s; }
     .day-tab.active { background: #1a1a18; color: #fff; border-color: #1a1a18; }
 
-    .layout { display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
-    @media (max-width: 600px) { .layout { grid-template-columns: 1fr; } }
-
     .stop { display: flex; gap: 12px; }
     .stop-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 40px; }
-    .stop-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #ccc; background: #f9f9f7; flex-shrink: 0; margin-top: 4px; transition: all .15s; }
-    .stop-dot.active { background: #1a1a18; border-color: #1a1a18; }
+    .stop-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #ccc; background: #f9f9f7; flex-shrink: 0; margin-top: 4px; }
     .stop-dot.optional { border-style: dashed; }
     .stop-line { width: 1px; background: #e5e3dc; flex: 1; min-height: 12px; }
-    .stop-content { flex: 1; padding-bottom: 20px; cursor: pointer; }
+    .stop-content { flex: 1; padding-bottom: 20px; }
     .stop-time { font-size: 11px; color: #aaa; margin-bottom: 2px; font-variant-numeric: tabular-nums; }
-    .stop-name { font-size: 14px; font-weight: 600; line-height: 1.3; }
-    .stop-name .badge { font-size: 10px; font-weight: 400; padding: 1px 6px; border-radius: 20px; margin-left: 6px; background: #eee; color: #888; vertical-align: middle; }
+    .stop-name { font-size: 14px; font-weight: 600; line-height: 1.3; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .stop-name .badge { font-size: 10px; font-weight: 400; padding: 1px 6px; border-radius: 20px; background: #eee; color: #888; }
+    .map-link { font-size: 11px; color: #185FA5; text-decoration: none; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+    .map-link:hover { text-decoration: underline; }
     .stop-note { font-size: 12px; color: #666; margin-top: 4px; line-height: 1.5; }
-    .stop-content:hover .stop-name { opacity: .7; }
-
-    .sidebar { }
-    .selected-card { background: #fff; border-radius: 12px; border: 1px solid #e5e3dc; padding: 12px 14px; margin-bottom: 12px; font-size: 13px; display: none; }
-    .selected-card-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-    .selected-card-note { color: #666; line-height: 1.5; }
-
-    .map-panel { position: sticky; top: 16px; height: 500px; border-radius: 12px; overflow: hidden; border: 1px solid #e5e3dc; background: #eee; }
-    .map-panel iframe { width: 100%; height: 100%; border: none; display: block; }
-    .map-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #aaa; font-size: 13px; }
-    .map-placeholder i { font-size: 32px; opacity: .4; }
   </style>
 </head>
 <body>
@@ -51,7 +38,7 @@
   <div class="hero">
     <div class="hero-eyebrow">June 25 – 26, 2025 · Philadelphia</div>
     <div class="hero-title">Philly Itinerary</div>
-    <div class="hero-sub">Click any stop to see it on the map · Itinerary by O</div>
+    <div class="hero-sub">Tap any map link to open in Google Maps · Itinerary by O</div>
   </div>
 
   <div class="day-tabs">
@@ -59,51 +46,36 @@
     <button class="day-tab" onclick="switchDay(1)">Fri Jun 26 🔔</button>
   </div>
 
-  <div class="layout">
-    <div id="timeline"></div>
-    <div class="sidebar">
-      <div class="selected-card" id="selected-card">
-        <div class="selected-card-name" id="card-name"></div>
-        <div class="selected-card-note" id="card-note"></div>
-      </div>
-      <div class="map-panel">
-        <iframe id="map-frame" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
-        <div class="map-placeholder" id="map-placeholder">
-          <i class="ti ti-map-pin"></i>
-          <span>Click a stop to see it on the map</span>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="timeline"></div>
 </div>
 
 <script>
 const days = [
   {
     stops: [
-      { time: '11:00 AM', name: '30th Street Station', note: 'Friends arrive, grab rental car, drive ~5 min to The Sterling to park 🚗', type: 'logistics', place_id: 'ChIJKxHG307GxokRP23dRyxLy64', lat: 39.9560, lng: -75.1819 },
+      { time: '11:00 AM', name: '30th Street Station', note: 'Friends arrive, grab rental car, drive ~5 min to The Sterling to park 🚗', type: 'logistics', lat: 39.9560, lng: -75.1819 },
       { time: '11:20 AM', name: 'The Sterling (Home Base)', note: 'Park the car here for the whole weekend. Quick freshen up then drive to Penn together.', type: 'logistics', lat: 39.9496, lng: -75.1638 },
-      { time: '11:45 AM', name: 'Greek Lady', note: 'Lunch first while friends decompress from travel. Gyros, big salads, super affordable 🥙', type: 'food', place_id: 'ChIJj8Rck_fGxokRUgegoueX-Xw', lat: 39.9534, lng: -75.2030 },
-      { time: '1:00 PM', name: 'Locust Walk + Wharton', note: 'Walk Locust Walk east through the heart of campus, end at Huntsman Hall for the Wharton sign pic 📸🌳', type: 'explore', place_id: 'ChIJKbIX01nGxokRfflFmiCBqac', lat: 39.9534, lng: -75.1980 },
-      { time: '2:05 PM', name: 'Penn Engineering (SEAS)', note: 'Natural last stop on the way back toward The Sterling 🔬', type: 'explore', place_id: 'ChIJIyoUmFrGxokRgZdeGzfVQ40', lat: 39.9525, lng: -75.1910 },
+      { time: '11:45 AM', name: 'Greek Lady', note: 'Lunch first while friends decompress from travel. Gyros, big salads, super affordable 🥙', type: 'food', lat: 39.9534, lng: -75.2030 },
+      { time: '1:00 PM', name: 'Locust Walk + Wharton', note: 'Walk Locust Walk east through the heart of campus, end at Huntsman Hall for the Wharton sign pic 📸🌳', type: 'explore', lat: 39.9534, lng: -75.1980 },
+      { time: '2:05 PM', name: 'Penn Engineering (SEAS)', note: 'Natural last stop on the way back toward The Sterling 🔬', type: 'explore', lat: 39.9525, lng: -75.1910 },
       { time: '2:35 PM', name: 'Rhodes Field', note: 'Optional Penn soccer facility — skip if running behind ⏱️', type: 'explore', optional: true, lat: 39.9522, lng: -75.1960 },
       { time: '3:00 PM', name: 'City Hall SEPTA Station', note: 'Board Broad Street Line south to NRG Station — $2.90 each way, ~20 min 🚇', type: 'logistics', lat: 39.9523, lng: -75.1638 },
       { time: '3:30 PM', name: 'Lincoln Financial Field', note: 'Curaçao vs. Ivory Coast, 4pm kickoff! World Cup atmosphere ⚽🌍', type: 'event', lat: 39.9008, lng: -75.1675 },
-      { time: '7:30 PM', name: "Pietro's Italian", note: 'Reservation already booked! SEPTA back to Center City then walk over 🍝', type: 'food', place_id: 'ChIJRZX8dzrGxokRjT88b2OBaZQ', lat: 39.9500, lng: -75.1700 },
-      { time: '9:15 PM', name: 'The Igloo', note: "Walk from Pietro's (~20-25 min) — perfect post-dinner stroll. Open til 11pm 🍦", type: 'dessert', place_id: 'ChIJddb1wEDGxokR-QidEoCdRCk', lat: 39.9451, lng: -75.1795 },
+      { time: '7:30 PM', name: "Pietro's Italian", note: 'Reservation already booked! SEPTA back to Center City then walk over 🍝', type: 'food', lat: 39.9500, lng: -75.1700 },
+      { time: '9:15 PM', name: 'The Igloo', note: "Walk from Pietro's (~20-25 min) — perfect post-dinner stroll. Open til 11pm 🍦", type: 'dessert', lat: 39.9451, lng: -75.1795 },
     ]
   },
   {
     stops: [
       { time: '9:00 AM', name: 'The Sterling (Meet Up)', note: 'Friends drive back and meet here. Everything from here is on foot 👟', type: 'logistics', lat: 39.9496, lng: -75.1638 },
-      { time: '9:30 AM', name: 'Green Eggs Café', note: 'Optional breakfast ~5 min walk. CASH ONLY — bring bills! Closes at 3pm 🍳', type: 'food', optional: true, place_id: 'ChIJLdzXkCXGxokRY_a5Y8wwv0Q', lat: 39.9482, lng: -75.1624 },
-      { time: '9:30 AM', name: 'Rocky Steps — Philadelphia Museum of Art', note: 'First stop! ~15 min walk from The Sterling. Run the steps, get the iconic photo 🏆📸', type: 'explore', place_id: 'ChIJ33ZAsLXHxokRRidoQ-ctnM4', lat: 39.9648, lng: -75.1799 },
-      { time: '11:00 AM', name: "Angelo's Pizzeria", note: "Arrive right at 11am when they open — line builds fast. They text you when your order's ready 🧀🥩", type: 'food', place_id: 'ChIJ-VWVqyHGxokRMGwj66qv2SY', lat: 39.9407, lng: -75.1577 },
-      { time: '12:30 PM', name: 'Liberty Bell Center', note: "Free entry! ~15 min walk from Angelo's. Bring ID for security 🔔", type: 'explore', place_id: 'ChIJo9mN1XTJxokRXw7NyvRIrB8', lat: 39.9502, lng: -75.1502 },
-      { time: '1:45 PM', name: 'Reading Terminal Market', note: "10 min walk from Liberty Bell. Browse, snack, Miller's Twist pretzels are a must 🥨", type: 'food', place_id: 'ChIJCQH7WCnGxokRAWsd3AfQj80', lat: 39.9532, lng: -75.1591 },
-      { time: '2:45 PM', name: 'Chinatown', note: 'Walk under the arch, get bubble tea, browse 🧋', type: 'explore', place_id: 'ChIJP12lIyrGxokRSMskstjPbug', lat: 39.9537, lng: -75.1563 },
+      { time: '9:30 AM', name: 'Green Eggs Café', note: 'Optional breakfast ~5 min walk. CASH ONLY — bring bills! Closes at 3pm 🍳', type: 'food', optional: true, lat: 39.9482, lng: -75.1624 },
+      { time: '9:30 AM', name: 'Rocky Steps — Philadelphia Museum of Art', note: 'First stop! ~15 min walk from The Sterling. Run the steps, get the iconic photo 🏆📸', type: 'explore', lat: 39.9648, lng: -75.1799 },
+      { time: '11:00 AM', name: "Angelo's Pizzeria", note: "Arrive right at 11am when they open — line builds fast. They text you when your order's ready 🧀🥩", type: 'food', lat: 39.9407, lng: -75.1577 },
+      { time: '12:30 PM', name: 'Liberty Bell Center', note: "Free entry! ~15 min walk from Angelo's. Bring ID for security 🔔", type: 'explore', lat: 39.9502, lng: -75.1502 },
+      { time: '1:45 PM', name: 'Reading Terminal Market', note: "10 min walk from Liberty Bell. Browse, snack, Miller's Twist pretzels are a must 🥨", type: 'food', lat: 39.9532, lng: -75.1591 },
+      { time: '2:45 PM', name: 'Chinatown', note: 'Walk under the arch, get bubble tea, browse 🧋', type: 'explore', lat: 39.9537, lng: -75.1563 },
       { time: '3:15 PM', name: 'Shopping — Chestnut & Walnut', note: 'Uniqlo, Abercrombie, Old Navy, Urban Outfitters, Anthropologie, thrift stores and more 🛍️', type: 'explore', lat: 39.9514, lng: -75.1675 },
-      { time: '5:00 PM', name: 'The Continental Mid-town', note: 'Group dinner for 5 — hanging chairs, rooftop seating, great cocktails 🍸', type: 'food', place_id: 'ChIJd0Vm6DDGxokRYDQQ0aFQgqY', lat: 39.9519, lng: -75.1705 },
+      { time: '5:00 PM', name: 'The Continental Mid-town', note: 'Group dinner for 5 — hanging chairs, rooftop seating, great cocktails 🍸', type: 'food', lat: 39.9519, lng: -75.1705 },
       { time: '7:30 PM', name: 'Philadelphia International Airport', note: 'Uber from Continental ~25 min. 9:50pm flight ✈️', type: 'logistics', lat: 39.8744, lng: -75.2424 },
     ]
   }
@@ -114,16 +86,15 @@ const typeColors = {
 };
 
 let activeDay = 0;
-let activeStop = null;
 
 function switchDay(d) {
   activeDay = d;
-  activeStop = null;
   document.querySelectorAll('.day-tab').forEach((t, i) => t.classList.toggle('active', i === d));
-  document.getElementById('selected-card').style.display = 'none';
-  document.getElementById('map-frame').src = '';
-  document.getElementById('map-placeholder').style.display = 'flex';
   renderTimeline();
+}
+
+function mapsUrl(s) {
+  return `https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}`;
 }
 
 function renderTimeline() {
@@ -131,47 +102,27 @@ function renderTimeline() {
   const stops = days[activeDay].stops;
   tl.innerHTML = stops.map((s, i) => {
     const isLast = i === stops.length - 1;
-    const isActive = activeStop === i;
-    const dotClass = `stop-dot${isActive ? ' active' : ''}${s.optional ? ' optional' : ''}`;
+    const dotClass = `stop-dot${s.optional ? ' optional' : ''}`;
     return `
       <div class="stop">
         <div class="stop-left">
-          <div class="${dotClass}" style="${isActive ? '' : `border-color:${typeColors[s.type]}`}"></div>
+          <div class="${dotClass}" style="border-color:${typeColors[s.type]}"></div>
           ${!isLast ? '<div class="stop-line"></div>' : ''}
         </div>
-        <div class="stop-content" onclick="selectStop(${i})">
+        <div class="stop-content">
           <div class="stop-time">${s.time}</div>
-          <div class="stop-name" style="color:${isActive ? '#1a1a18' : typeColors[s.type]}">
-            ${s.name}${s.optional ? '<span class="badge">optional</span>' : ''}
+          <div class="stop-name" style="color:${typeColors[s.type]}">
+            ${s.name}
+            ${s.optional ? '<span class="badge">optional</span>' : ''}
+            <a class="map-link" href="${mapsUrl(s)}" target="_blank" rel="noopener">
+              <i class="ti ti-map-pin" style="font-size:12px"></i> maps
+            </a>
           </div>
           <div class="stop-note">${s.note}</div>
         </div>
       </div>
     `;
   }).join('');
-}
-
-function selectStop(i) {
-  activeStop = i;
-  const s = days[activeDay].stops[i];
-
-  const card = document.getElementById('selected-card');
-  card.style.display = 'block';
-  document.getElementById('card-name').style.color = typeColors[s.type];
-  document.getElementById('card-name').textContent = s.name;
-  document.getElementById('card-note').textContent = s.time + ' · ' + s.note;
-
-  const frame = document.getElementById('map-frame');
-  const placeholder = document.getElementById('map-placeholder');
-
-  const src = s.place_id
-    ? `https://www.google.com/maps/embed/v1/place?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNBg&q=place_id:${s.place_id}&zoom=15`
-    : `https://www.google.com/maps/embed/v1/view?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNBg&center=${s.lat},${s.lng}&zoom=15&maptype=roadmap`;
-
-  frame.src = src;
-  placeholder.style.display = 'none';
-
-  renderTimeline();
 }
 
 renderTimeline();
