@@ -15,10 +15,12 @@
     .hero-title { font-size: 28px; font-weight: 600; line-height: 1.2; color: #1a1a18; }
     .hero-sub { font-size: 14px; color: #888780; margin-top: .5rem; }
 
-    .day-tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+    .day-tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
     .day-tab { padding: 6px 16px; border: 1px solid #ccc; border-radius: 8px; font-size: 13px; cursor: pointer; background: #fff; color: #666; transition: all .15s; }
     .day-tab.active { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+    .day-tab.extras-tab.active { background: #533AB7; border-color: #533AB7; }
 
+    /* timeline */
     .stop { display: flex; gap: 12px; }
     .stop-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 40px; }
     .stop-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #ccc; background: #f9f9f7; flex-shrink: 0; margin-top: 4px; }
@@ -31,6 +33,29 @@
     .map-link { font-size: 11px; color: #185FA5; text-decoration: none; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
     .map-link:hover { text-decoration: underline; }
     .stop-note { font-size: 12px; color: #666; margin-top: 4px; line-height: 1.5; }
+
+    /* extras page */
+    .extras-grid { display: flex; flex-direction: column; gap: 12px; }
+    .extra-card { background: #fff; border: 1px solid #e5e3dc; border-radius: 12px; padding: 14px 16px; }
+    .extra-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+    .extra-card-name { font-size: 15px; font-weight: 600; color: #1a1a18; }
+    .extra-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    .tag-free { background: #eaf3de; color: #3B6D11; }
+    .tag-paid { background: #faeeda; color: #854F0B; }
+    .tag-food { background: #fef3e2; color: #B07D10; }
+    .tag-art { background: #EEEDFE; color: #533AB7; }
+    .tag-history { background: #faece7; color: #993C1D; }
+    .tag-outdoors { background: #e1f5ee; color: #0F6E56; }
+    .extra-desc { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 10px; }
+    .extra-fit { font-size: 12px; color: #185FA5; background: #e6f1fb; border-radius: 8px; padding: 8px 10px; line-height: 1.5; margin-bottom: 10px; }
+    .extra-fit strong { font-weight: 600; }
+    .extra-footer { display: flex; align-items: center; justify-content: space-between; }
+    .extra-meta { font-size: 11px; color: #aaa; }
+    .extra-map-link { font-size: 12px; color: #185FA5; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+    .extra-map-link:hover { text-decoration: underline; }
+
+    .section-note { font-size: 13px; color: #888; margin-bottom: 16px; line-height: 1.6; padding: 10px 12px; background: #fff; border-radius: 8px; border: 1px solid #e5e3dc; }
   </style>
 </head>
 <body>
@@ -44,9 +69,11 @@
   <div class="day-tabs">
     <button class="day-tab active" onclick="switchDay(0)">Thu Jun 25 ⚽</button>
     <button class="day-tab" onclick="switchDay(1)">Fri Jun 26 🔔</button>
+    <button class="day-tab extras-tab" onclick="switchDay(2)">More to do ✨</button>
   </div>
 
   <div id="timeline"></div>
+  <div id="extras" style="display:none"></div>
 </div>
 
 <script>
@@ -76,25 +103,76 @@ const days = [
       { time: '2:45 PM', name: 'Chinatown', note: 'Walk under the arch, get bubble tea, browse 🧋', type: 'explore', lat: 39.9537, lng: -75.1563 },
       { time: '3:15 PM', name: 'Shopping — Chestnut & Walnut', note: 'Uniqlo, Abercrombie, Old Navy, Urban Outfitters, Anthropologie, thrift stores and more 🛍️', type: 'explore', lat: 39.9514, lng: -75.1675 },
       { time: '5:00 PM', name: 'The Continental Mid-town', note: 'Group dinner for 5 — hanging chairs, rooftop seating, great cocktails 🍸', type: 'food', lat: 39.9519, lng: -75.1705 },
-      { time: '7:30 PM', name: ' [ORE ONLY] Philadelphia International Airport', note: 'Uber from Continental ~25 min. 9:50pm flight ✈️', type: 'logistics', lat: 39.8744, lng: -75.2424 },
+      { time: '7:30 PM', name: '[ORE ONLY] Philadelphia International Airport', note: 'Uber from Continental ~25 min. 9:50pm flight ✈️', type: 'logistics', lat: 39.8744, lng: -75.2424 },
     ]
   }
 ];
 
-const typeColors = {
-  food: '#B07D10', explore: '#185FA5', logistics: '#3B6D11', event: '#993556', dessert: '#533AB7'
-};
+const extras = [
+  {
+    name: "Philadelphia's Magic Gardens",
+    tags: [{ label: 'Art', cls: 'tag-art' }, { label: 'Paid (~$10)', cls: 'tag-paid' }],
+    desc: "Isaiah Zagar's epic mosaic wonderland covering an entire block on South Street — covered in tiles, mirrors, bottles, and found objects. One of the most visually wild spots in the city. Book tickets in advance, slots fill up.",
+    fit: "Swap for: the Chinatown or shopping stretch on Fri if you want more art. It's about 15 min walk from Angelo's or 10 min from Liberty Bell. Works great as a ~1pm stop after Angelo's instead of going straight to Liberty Bell.",
+    hours: 'Open Fri 11am–6pm',
+    lat: 39.9426, lng: -75.1594
+  },
+  {
+    name: 'Museum for Art in Wood',
+    tags: [{ label: 'Art', cls: 'tag-art' }, { label: 'Free', cls: 'tag-free' }],
+    desc: "Tiny but mighty free museum in Old City dedicated entirely to wood sculpture and craft. Only a few rooms but the pieces are genuinely stunning — staff are super knowledgeable and will walk you through everything.",
+    fit: "Fits perfectly after Liberty Bell — it's literally a 3 min walk away on N 3rd St. Slot it in between Liberty Bell (12:30pm) and Reading Terminal, takes about 45 min.",
+    hours: 'Open Fri 11:30am–5pm',
+    lat: 39.9534, lng: -75.1447
+  },
+  {
+    name: 'Eastern State Penitentiary',
+    tags: [{ label: 'History', cls: 'tag-history' }, { label: 'Paid (~$20)', cls: 'tag-paid' }],
+    desc: "One of the most hauntingly beautiful places in Philly — a crumbling 1829 prison with an incredible self-guided audio tour. Al Capone was held here. Eerie, photogenic, and genuinely fascinating. Buy tickets online.",
+    fit: "Best as a morning swap on Fri — it's a 10 min walk from the Rocky Steps, so you could do Steps → Eastern State → then head to Angelo's. Adds about 1.5–2 hrs to the morning.",
+    hours: 'Open Fri 10am–5pm',
+    lat: 39.9683, lng: -75.1727
+  },
+  {
+    name: "Elfreth's Alley",
+    tags: [{ label: 'History', cls: 'tag-history' }, { label: 'Free', cls: 'tag-free' }],
+    desc: "The oldest continuously inhabited residential street in the US, dating back to 1702. Just a short cobblestone block but super charming and great for photos. No tickets needed — you just walk through.",
+    fit: "Easy add-on after Liberty Bell — it's a 5 min walk into Old City. Takes maybe 15–20 min total. Slot it right between Liberty Bell and Reading Terminal Market without disrupting the flow.",
+    hours: 'Always open (outdoor street)',
+    lat: 39.9527, lng: -75.1420
+  },
+  {
+    name: "Penn's Landing / Delaware River Waterfront",
+    tags: [{ label: 'Outdoors', cls: 'tag-outdoors' }, { label: 'Free', cls: 'tag-free' }],
+    desc: "Chill waterfront stretch along the Delaware River with views of the Ben Franklin Bridge. Good energy in the summer — food trucks, pop-ups, and just a nice place to decompress. Race Street Pier is especially scenic.",
+    fit: "Great evening wind-down after dinner if the group has energy and doesn't want to go straight to the airport. It's about 10 min walk from Continental — grab the Uber to the airport from here instead.",
+    hours: 'Always open',
+    lat: 39.9468, lng: -75.1407
+  },
+  {
+    name: 'Love Park (JFK Plaza)',
+    tags: [{ label: 'Outdoors', cls: 'tag-outdoors' }, { label: 'Free', cls: 'tag-free' }],
+    desc: "Iconic Philly landmark with the famous LOVE sculpture — quick photo op, central location, and right next to City Hall. Fountains running all summer. Classic.",
+    fit: "Easiest add on the whole list — it's literally on the walk back from Chinatown toward the shopping strip on Fri. Takes 5 min, grab the photo, keep moving.",
+    hours: 'Open daily 7am–10pm',
+    lat: 39.9541, lng: -75.1656
+  }
+];
 
+const typeColors = { food: '#B07D10', explore: '#185FA5', logistics: '#3B6D11', event: '#993556', dessert: '#533AB7' };
 let activeDay = 0;
 
 function switchDay(d) {
   activeDay = d;
   document.querySelectorAll('.day-tab').forEach((t, i) => t.classList.toggle('active', i === d));
-  renderTimeline();
+  document.getElementById('timeline').style.display = d < 2 ? '' : 'none';
+  document.getElementById('extras').style.display = d === 2 ? '' : 'none';
+  if (d < 2) renderTimeline();
+  else renderExtras();
 }
 
-function mapsUrl(s) {
-  return `https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}`;
+function mapsUrl(lat, lng) {
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 }
 
 function renderTimeline() {
@@ -114,7 +192,7 @@ function renderTimeline() {
           <div class="stop-name" style="color:${typeColors[s.type]}">
             ${s.name}
             ${s.optional ? '<span class="badge">optional</span>' : ''}
-            <a class="map-link" href="${mapsUrl(s)}" target="_blank" rel="noopener">
+            <a class="map-link" href="${mapsUrl(s.lat, s.lng)}" target="_blank" rel="noopener">
               <i class="ti ti-map-pin" style="font-size:12px"></i> maps
             </a>
           </div>
@@ -123,6 +201,31 @@ function renderTimeline() {
       </div>
     `;
   }).join('');
+}
+
+function renderExtras() {
+  const el = document.getElementById('extras');
+  el.innerHTML = `
+    <div class="section-note">These aren't on the main itinerary but are all worth knowing about — whether you want to swap something out or squeeze in an extra stop. Notes on how each one fits are included.</div>
+    <div class="extras-grid">
+      ${extras.map(e => `
+        <div class="extra-card">
+          <div class="extra-card-header">
+            <div class="extra-card-name">${e.name}</div>
+          </div>
+          <div class="extra-tags">${e.tags.map(t => `<span class="tag ${t.cls}">${t.label}</span>`).join('')}</div>
+          <div class="extra-desc">${e.desc}</div>
+          <div class="extra-fit"><strong>How it fits:</strong> ${e.fit}</div>
+          <div class="extra-footer">
+            <span class="extra-meta">${e.hours}</span>
+            <a class="extra-map-link" href="${mapsUrl(e.lat, e.lng)}" target="_blank" rel="noopener">
+              <i class="ti ti-map-pin" style="font-size:13px"></i> open in maps
+            </a>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
 renderTimeline();
