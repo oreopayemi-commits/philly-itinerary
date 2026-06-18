@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f9f9f7; color: #1a1a18; min-height: 100vh; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f9f9f7; color: #1a1a18; min-height: 100vh; padding-bottom: 100px; }
     .wrap { max-width: 600px; margin: 0 auto; padding: 0 16px 60px; }
 
     .hero { padding: 2.5rem 0 1.5rem; border-bottom: 1px solid #e5e3dc; margin-bottom: 1.5rem; }
@@ -20,7 +20,6 @@
     .day-tab.active { background: #1a1a18; color: #fff; border-color: #1a1a18; }
     .day-tab.extras-tab.active { background: #533AB7; border-color: #533AB7; }
 
-    /* timeline */
     .stop { display: flex; gap: 12px; }
     .stop-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 40px; }
     .stop-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #ccc; background: #f9f9f7; flex-shrink: 0; margin-top: 4px; }
@@ -34,16 +33,14 @@
     .map-link:hover { text-decoration: underline; }
     .stop-note { font-size: 12px; color: #666; margin-top: 4px; line-height: 1.5; }
 
-    /* extras page */
+    /* extras */
     .extras-grid { display: flex; flex-direction: column; gap: 12px; }
     .extra-card { background: #fff; border: 1px solid #e5e3dc; border-radius: 12px; padding: 14px 16px; }
-    .extra-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
-    .extra-card-name { font-size: 15px; font-weight: 600; color: #1a1a18; }
+    .extra-card-name { font-size: 15px; font-weight: 600; color: #1a1a18; margin-bottom: 6px; }
     .extra-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
     .tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
     .tag-free { background: #eaf3de; color: #3B6D11; }
     .tag-paid { background: #faeeda; color: #854F0B; }
-    .tag-food { background: #fef3e2; color: #B07D10; }
     .tag-art { background: #EEEDFE; color: #533AB7; }
     .tag-history { background: #faece7; color: #993C1D; }
     .tag-outdoors { background: #e1f5ee; color: #0F6E56; }
@@ -54,8 +51,16 @@
     .extra-meta { font-size: 11px; color: #aaa; }
     .extra-map-link { font-size: 12px; color: #185FA5; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
     .extra-map-link:hover { text-decoration: underline; }
-
     .section-note { font-size: 13px; color: #888; margin-bottom: 16px; line-height: 1.6; padding: 10px 12px; background: #fff; border-radius: 8px; border: 1px solid #e5e3dc; }
+
+    /* reminders footer */
+    .reminders-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e5e3dc; padding: 10px 16px; z-index: 100; }
+    .reminders-inner { max-width: 600px; margin: 0 auto; }
+    .reminders-title { font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+    .reminders-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .reminder-chip { font-size: 12px; color: #444; background: #f2f1ed; border-radius: 20px; padding: 4px 10px; line-height: 1.4; }
+    .reminder-chip a { color: #185FA5; text-decoration: none; }
+    .reminder-chip a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -76,86 +81,83 @@
   <div id="extras" style="display:none"></div>
 </div>
 
+<div class="reminders-bar">
+  <div class="reminders-inner">
+    <div class="reminders-title">Reminders</div>
+    <div class="reminders-list">
+      <span class="reminder-chip">🚇 SEPTA Broad St Line — $2.90 each way</span>
+      <span class="reminder-chip">🧀 Angelo's — cash only, arrive at 11am</span>
+      <span class="reminder-chip">🔔 Liberty Bell — free, bring ID</span>
+      <span class="reminder-chip">🎨 Magic Gardens — <a href="https://www.phillymagicgardens.org/" target="_blank">book tickets in advance</a></span>
+    </div>
+  </div>
+</div>
+
 <script>
 const days = [
   {
     stops: [
-      { time: '11:00 AM', name: '30th Street Station', note: 'Friends arrive, grab rental car, drive ~5 min to The Sterling to park 🚗', type: 'logistics', lat: 39.9560, lng: -75.1819 },
-      { time: '11:20 AM', name: 'The Sterling (Home Base)', note: 'Park the car here for the whole weekend. Quick freshen up then drive to Penn together.', type: 'logistics', lat: 39.9496, lng: -75.1638 },
-      { time: '11:45 AM', name: 'Greek Lady', note: 'Lunch first while friends decompress from travel. Gyros, big salads, super affordable 🥙', type: 'food', lat: 39.9534, lng: -75.2030 },
-      { time: '1:00 PM', name: 'Locust Walk + Wharton', note: 'Walk Locust Walk east through the heart of campus, end at Huntsman Hall for the Wharton sign pic 📸🌳', type: 'explore', lat: 39.9534, lng: -75.1980 },
-      { time: '2:05 PM', name: 'Penn Engineering (SEAS)', note: 'Natural last stop on the way back toward The Sterling 🔬', type: 'explore', lat: 39.9525, lng: -75.1910 },
-      { time: '2:35 PM', name: 'Rhodes Field', note: 'Optional Penn soccer facility — skip if running behind ⏱️', type: 'explore', optional: true, lat: 39.9522, lng: -75.1960 },
-      { time: '3:00 PM', name: 'City Hall SEPTA Station', note: 'Board Broad Street Line south to NRG Station — $2.90 each way, ~20 min 🚇', type: 'logistics', lat: 39.9523, lng: -75.1638 },
-      { time: '3:30 PM', name: 'Lincoln Financial Field', note: 'Curaçao vs. Ivory Coast, 4pm kickoff! World Cup atmosphere ⚽🌍', type: 'event', lat: 39.9008, lng: -75.1675 },
-      { time: '7:30 PM', name: "Pietro's Italian", note: 'Reservation already booked! SEPTA back to Center City then walk over 🍝', type: 'food', lat: 39.9500, lng: -75.1700 },
-      { time: '9:15 PM', name: 'The Igloo', note: "Walk from Pietro's (~20-25 min) — perfect post-dinner stroll. Open til 11pm 🍦", type: 'dessert', lat: 39.9451, lng: -75.1795 },
+      { time: '11:00 AM', name: '30th Street Station', note: 'Friends arrive, grab rental car, drive to The Sterling to park 🚗', type: 'logistics', url: 'https://maps.google.com/?cid=12595243436428062015' },
+      { time: '11:20 AM', name: 'The Sterling (Home Base)', note: 'Park the car here for the whole weekend. Quick freshen up then head to Penn.', type: 'logistics', url: null },
+      { time: '11:45 AM', name: 'Greek Lady', note: 'Lunch while friends decompress from travel. Gyros, big salads, super affordable 🥙', type: 'food', url: 'https://maps.google.com/?cid=9005395951025653586' },
+      { time: '1:00 PM', name: 'Locust Walk + Wharton School', note: 'Walk Locust Walk east through campus, end at Huntsman Hall for the Wharton sign pic 📸', type: 'explore', url: 'https://maps.google.com/?cid=10129302868525581641' },
+      { time: '1:45 PM', name: 'Franklin Field + Penn Museum', note: 'Oldest football stadium in the US right across from the Penn Museum — walk both 🏛️', type: 'explore', url: 'https://maps.google.com/?cid=1157899643571019546', url2: { label: 'Penn Museum', href: 'https://maps.google.com/?cid=3189700885953396518' } },
+      { time: '2:30 PM', name: 'Cira Green', note: 'Rooftop park near 30th St with amazing city views 🌿 (pass through Penn Park on the way)', type: 'explore', url: 'https://maps.google.com/?cid=2017761645659983643' },
+      { time: '3:00 PM', name: 'City Hall SEPTA Station', note: 'Board Broad Street Line south to NRG Station — $2.90 each way, ~20 min 🚇', type: 'logistics', url: null },
+      { time: '3:30 PM', name: 'Lincoln Financial Field', note: 'Curaçao vs. Ivory Coast, 4pm kickoff! World Cup atmosphere ⚽🌍', type: 'event', url: 'https://maps.google.com/?cid=3957482817576677597' },
+      { time: '7:00 PM', name: "Pietro's Italian", note: 'Reservation already booked! 🍝', type: 'food', url: 'https://maps.google.com/?cid=10694221054235918221' },
+      { time: '8:45 PM', name: 'The Igloo', note: 'Walk from Pietro\'s (~20-25 min) — post-dinner froyo stroll. Open til 11pm 🍦', type: 'dessert', url: 'https://maps.google.com/?cid=2973674827365026041' },
     ]
   },
   {
     stops: [
-      { time: '9:00 AM', name: 'The Sterling (Meet Up)', note: 'Friends drive back and meet here. Everything from here is on foot 👟', type: 'logistics', lat: 39.9496, lng: -75.1638 },
-      { time: '9:30 AM', name: 'Green Eggs Café', note: 'Optional breakfast ~5 min walk. CASH ONLY — bring bills! Closes at 3pm 🍳', type: 'food', optional: true, lat: 39.9482, lng: -75.1624 },
-      { time: '9:30 AM', name: 'Rocky Steps — Philadelphia Museum of Art', note: 'First stop! ~15 min walk from The Sterling. Run the steps, get the iconic photo 🏆📸', type: 'explore', lat: 39.9648, lng: -75.1799 },
-      { time: '11:00 AM', name: "Angelo's Pizzeria", note: "Arrive right at 11am when they open — line builds fast. They text you when your order's ready 🧀🥩", type: 'food', lat: 39.9407, lng: -75.1577 },
-      { time: '12:30 PM', name: 'Liberty Bell Center', note: "Free entry! ~15 min walk from Angelo's. Bring ID for security 🔔", type: 'explore', lat: 39.9502, lng: -75.1502 },
-      { time: '1:45 PM', name: 'Reading Terminal Market', note: "10 min walk from Liberty Bell. Browse, snack, Miller's Twist pretzels are a must 🥨", type: 'food', lat: 39.9532, lng: -75.1591 },
-      { time: '2:45 PM', name: 'Chinatown', note: 'Walk under the arch, get bubble tea, browse 🧋', type: 'explore', lat: 39.9537, lng: -75.1563 },
-      { time: '3:15 PM', name: 'Shopping — Chestnut & Walnut', note: 'Uniqlo, Abercrombie, Old Navy, Urban Outfitters, Anthropologie, thrift stores and more 🛍️', type: 'explore', lat: 39.9514, lng: -75.1675 },
-      { time: '5:00 PM', name: 'The Continental Mid-town', note: 'Group dinner for 5 — hanging chairs, rooftop seating, great cocktails 🍸', type: 'food', lat: 39.9519, lng: -75.1705 },
-      { time: '7:30 PM', name: '[ORE ONLY] Philadelphia International Airport', note: 'Uber from Continental ~25 min. 9:50pm flight ✈️', type: 'logistics', lat: 39.8744, lng: -75.2424 },
+      { time: '9:00 AM', name: 'The Sterling (Meet Up)', note: 'Friends drive here and park. Everything from here is on foot 👟', type: 'logistics', url: null },
+      { time: '9:30 AM', name: 'Rocky Steps — Philadelphia Museum of Art', note: 'Run the steps, get the iconic photo. Always free! 🏆📸', type: 'explore', url: 'https://maps.google.com/?cid=14887824939471611718' },
+      { time: '10:00 AM', name: 'Boathouse Row', note: 'Beautiful Victorian boathouses on the Schuylkill — 5-10 min walk from Rocky Steps along Kelly Drive 🚣', type: 'explore', url: 'https://maps.google.com/?cid=4972583374919278636' },
+      { time: '11:00 AM', name: "Philadelphia's Magic Gardens", note: 'Incredible mosaic art installation on South Street. Book tickets in advance! ~$10-15/person 🎨', type: 'explore', url: 'https://maps.google.com/?cid=7998075498390028587' },
+      { time: '12:00 PM', name: "Angelo's Pizzeria", note: "10 min walk from Magic Gardens. Order the cheesesteak — it'll change your life 🧀🥩. Cash only!", type: 'food', url: 'https://maps.google.com/?cid=2799461792011742256' },
+      { time: '1:15 PM', name: 'Liberty Bell Center', note: 'Free entry! Bring ID for security 🔔', type: 'explore', url: 'https://maps.google.com/?cid=2282279327381655135' },
+      { time: '2:00 PM', name: "Elfreth's Alley", note: "America's oldest residential street. Museum opens at 12pm, only $3 to enter 🏘️", type: 'explore', url: 'https://maps.google.com/?cid=9372751470809636750' },
+      { time: '2:45 PM', name: 'Reading Terminal Market', note: "Browse, snack, grab Miller's Twist pretzels 🥨", type: 'food', url: 'https://maps.google.com/?cid=14812286431621114625' },
+      { time: '3:30 PM', name: 'Chinatown', note: '2 min walk from Reading Terminal. Bubble tea, walk the arch, browse 🧋', type: 'explore', url: 'https://maps.google.com/?cid=351114119944824147' },
+      { time: '4:30 PM', name: 'Shopping — Chestnut & Walnut St', note: 'Stroll the strip — Uniqlo, Abercrombie, Old Navy, Urban Outfitters, Anthropologie, H&M, Banana Republic, J.Crew, thrift stores and more 🛍️', type: 'explore', url: null },
+      { time: '7:00 PM', name: 'Say goodbyes! 👋', note: 'Safe travels everyone ✈️', type: 'logistics', url: null },
     ]
   }
 ];
 
 const extras = [
   {
-    name: "Philadelphia's Magic Gardens",
-    tags: [{ label: 'Art', cls: 'tag-art' }, { label: 'Paid (~$10)', cls: 'tag-paid' }],
-    desc: "Isaiah Zagar's epic mosaic wonderland covering an entire block on South Street — covered in tiles, mirrors, bottles, and found objects. One of the most visually wild spots in the city. Book tickets in advance, slots fill up.",
-    fit: "Swap for: the Chinatown or shopping stretch on Fri if you want more art. It's about 15 min walk from Angelo's or 10 min from Liberty Bell. Works great as a ~1pm stop after Angelo's instead of going straight to Liberty Bell.",
-    hours: 'Open Fri 11am–6pm',
-    lat: 39.9426, lng: -75.1594
-  },
-  {
-    name: 'Museum for Art in Wood',
-    tags: [{ label: 'Art', cls: 'tag-art' }, { label: 'Free', cls: 'tag-free' }],
-    desc: "Tiny but mighty free museum in Old City dedicated entirely to wood sculpture and craft. Only a few rooms but the pieces are genuinely stunning — staff are super knowledgeable and will walk you through everything.",
-    fit: "Fits perfectly after Liberty Bell — it's literally a 3 min walk away on N 3rd St. Slot it in between Liberty Bell (12:30pm) and Reading Terminal, takes about 45 min.",
-    hours: 'Open Fri 11:30am–5pm',
-    lat: 39.9534, lng: -75.1447
-  },
-  {
-    name: 'Eastern State Penitentiary',
+    name: "Eastern State Penitentiary",
     tags: [{ label: 'History', cls: 'tag-history' }, { label: 'Paid (~$20)', cls: 'tag-paid' }],
     desc: "One of the most hauntingly beautiful places in Philly — a crumbling 1829 prison with an incredible self-guided audio tour. Al Capone was held here. Eerie, photogenic, and genuinely fascinating. Buy tickets online.",
-    fit: "Best as a morning swap on Fri — it's a 10 min walk from the Rocky Steps, so you could do Steps → Eastern State → then head to Angelo's. Adds about 1.5–2 hrs to the morning.",
+    fit: "Best as a morning swap on Fri — it's a 10 min walk from the Rocky Steps, so you could do Steps → Eastern State → then head downtown. Adds about 1.5–2 hrs to the morning.",
     hours: 'Open Fri 10am–5pm',
-    lat: 39.9683, lng: -75.1727
-  },
-  {
-    name: "Elfreth's Alley",
-    tags: [{ label: 'History', cls: 'tag-history' }, { label: 'Free', cls: 'tag-free' }],
-    desc: "The oldest continuously inhabited residential street in the US, dating back to 1702. Just a short cobblestone block but super charming and great for photos. No tickets needed — you just walk through.",
-    fit: "Easy add-on after Liberty Bell — it's a 5 min walk into Old City. Takes maybe 15–20 min total. Slot it right between Liberty Bell and Reading Terminal Market without disrupting the flow.",
-    hours: 'Always open (outdoor street)',
-    lat: 39.9527, lng: -75.1420
+    url: 'https://www.google.com/maps/search/?api=1&query=39.9683,-75.1727'
   },
   {
     name: "Penn's Landing / Delaware River Waterfront",
     tags: [{ label: 'Outdoors', cls: 'tag-outdoors' }, { label: 'Free', cls: 'tag-free' }],
-    desc: "Chill waterfront stretch along the Delaware River with views of the Ben Franklin Bridge. Good energy in the summer — food trucks, pop-ups, and just a nice place to decompress. Race Street Pier is especially scenic.",
-    fit: "Great evening wind-down after dinner if the group has energy and doesn't want to go straight to the airport. It's about 10 min walk from Continental — grab the Uber to the airport from here instead.",
+    desc: "Chill waterfront stretch along the Delaware River with views of the Ben Franklin Bridge. Good energy in the summer — food trucks, pop-ups, and a great place to decompress. Race Street Pier is especially scenic.",
+    fit: "Great evening wind-down after shopping if the group has time before goodbyes. About 15 min walk from the Chestnut/Walnut strip toward the river.",
     hours: 'Always open',
-    lat: 39.9468, lng: -75.1407
+    url: 'https://www.google.com/maps/search/?api=1&query=39.9468,-75.1407'
+  },
+  {
+    name: 'Museum for Art in Wood',
+    tags: [{ label: 'Art', cls: 'tag-art' }, { label: 'Free', cls: 'tag-free' }],
+    desc: "Tiny but mighty free museum in Old City dedicated entirely to wood sculpture and craft. Only a few rooms but the pieces are genuinely stunning — staff are super knowledgeable.",
+    fit: "Fits perfectly after Liberty Bell — it's literally a 3 min walk away on N 3rd St. Takes about 45 min, slot between Liberty Bell and Reading Terminal.",
+    hours: 'Open Fri 11:30am–5pm',
+    url: 'https://www.google.com/maps/search/?api=1&query=39.9534,-75.1447'
   },
   {
     name: 'Love Park (JFK Plaza)',
     tags: [{ label: 'Outdoors', cls: 'tag-outdoors' }, { label: 'Free', cls: 'tag-free' }],
-    desc: "Iconic Philly landmark with the famous LOVE sculpture — quick photo op, central location, and right next to City Hall. Fountains running all summer. Classic.",
-    fit: "Easiest add on the whole list — it's literally on the walk back from Chinatown toward the shopping strip on Fri. Takes 5 min, grab the photo, keep moving.",
+    desc: "Iconic Philly landmark with the famous LOVE sculpture. Quick photo op, right next to City Hall, and fountains running all summer.",
+    fit: "Easy add on the walk back from Chinatown toward the shopping strip — takes 5 min, grab the photo, keep moving.",
     hours: 'Open daily 7am–10pm',
-    lat: 39.9541, lng: -75.1656
+    url: 'https://www.google.com/maps/search/?api=1&query=39.9541,-75.1656'
   }
 ];
 
@@ -171,16 +173,15 @@ function switchDay(d) {
   else renderExtras();
 }
 
-function mapsUrl(lat, lng) {
-  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-}
-
 function renderTimeline() {
   const tl = document.getElementById('timeline');
   const stops = days[activeDay].stops;
   tl.innerHTML = stops.map((s, i) => {
     const isLast = i === stops.length - 1;
     const dotClass = `stop-dot${s.optional ? ' optional' : ''}`;
+    const mapLinks = [];
+    if (s.url) mapLinks.push(`<a class="map-link" href="${s.url}" target="_blank" rel="noopener"><i class="ti ti-map-pin" style="font-size:12px"></i> maps</a>`);
+    if (s.url2) mapLinks.push(`<a class="map-link" href="${s.url2.href}" target="_blank" rel="noopener"><i class="ti ti-map-pin" style="font-size:12px"></i> ${s.url2.label}</a>`);
     return `
       <div class="stop">
         <div class="stop-left">
@@ -192,9 +193,7 @@ function renderTimeline() {
           <div class="stop-name" style="color:${typeColors[s.type]}">
             ${s.name}
             ${s.optional ? '<span class="badge">optional</span>' : ''}
-            <a class="map-link" href="${mapsUrl(s.lat, s.lng)}" target="_blank" rel="noopener">
-              <i class="ti ti-map-pin" style="font-size:12px"></i> maps
-            </a>
+            ${mapLinks.join('')}
           </div>
           <div class="stop-note">${s.note}</div>
         </div>
@@ -206,21 +205,17 @@ function renderTimeline() {
 function renderExtras() {
   const el = document.getElementById('extras');
   el.innerHTML = `
-    <div class="section-note">These aren't on the main itinerary but are all worth knowing about — whether you want to swap something out or squeeze in an extra stop. Notes on how each one fits are included.</div>
+    <div class="section-note">These aren't on the main itinerary but are all worth knowing about — swap something out or squeeze one in if you have time.</div>
     <div class="extras-grid">
       ${extras.map(e => `
         <div class="extra-card">
-          <div class="extra-card-header">
-            <div class="extra-card-name">${e.name}</div>
-          </div>
+          <div class="extra-card-name">${e.name}</div>
           <div class="extra-tags">${e.tags.map(t => `<span class="tag ${t.cls}">${t.label}</span>`).join('')}</div>
           <div class="extra-desc">${e.desc}</div>
           <div class="extra-fit"><strong>How it fits:</strong> ${e.fit}</div>
           <div class="extra-footer">
             <span class="extra-meta">${e.hours}</span>
-            <a class="extra-map-link" href="${mapsUrl(e.lat, e.lng)}" target="_blank" rel="noopener">
-              <i class="ti ti-map-pin" style="font-size:13px"></i> open in maps
-            </a>
+            <a class="extra-map-link" href="${e.url}" target="_blank" rel="noopener"><i class="ti ti-map-pin" style="font-size:13px"></i> open in maps</a>
           </div>
         </div>
       `).join('')}
