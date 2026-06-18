@@ -33,7 +33,6 @@
     .map-link:hover { text-decoration: underline; }
     .stop-note { font-size: 12px; color: #666; margin-top: 4px; line-height: 1.5; }
 
-    /* extras */
     .extras-grid { display: flex; flex-direction: column; gap: 12px; }
     .extra-card { background: #fff; border: 1px solid #e5e3dc; border-radius: 12px; padding: 14px 16px; }
     .extra-card-name { font-size: 15px; font-weight: 600; color: #1a1a18; margin-bottom: 6px; }
@@ -53,7 +52,6 @@
     .extra-map-link:hover { text-decoration: underline; }
     .section-note { font-size: 13px; color: #888; margin-bottom: 16px; line-height: 1.6; padding: 10px 12px; background: #fff; border-radius: 8px; border: 1px solid #e5e3dc; }
 
-    /* reminders footer */
     .reminders-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e5e3dc; padding: 10px 16px; z-index: 100; }
     .reminders-inner { max-width: 600px; margin: 0 auto; }
     .reminders-title { font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
@@ -106,7 +104,7 @@ const days = [
       { time: '3:00 PM', name: 'City Hall SEPTA Station', note: 'Board Broad Street Line south to NRG Station — $2.90 each way, ~20 min 🚇', type: 'logistics', url: null },
       { time: '3:30 PM', name: 'Lincoln Financial Field', note: 'Curaçao vs. Ivory Coast, 4pm kickoff! World Cup atmosphere ⚽🌍', type: 'event', url: 'https://maps.google.com/?cid=3957482817576677597' },
       { time: '7:00 PM', name: "Pietro's Italian", note: 'Reservation already booked! 🍝', type: 'food', url: 'https://maps.google.com/?cid=10694221054235918221' },
-      { time: '8:45 PM', name: 'The Igloo', note: 'Walk from Pietro\'s (~20-25 min) — post-dinner froyo stroll. Open til 11pm 🍦', type: 'dessert', url: 'https://maps.google.com/?cid=2973674827365026041' },
+      { time: '8:45 PM', name: 'The Igloo', note: "Walk from Pietro's (~20-25 min) — post-dinner froyo stroll. Open til 11pm 🍦", type: 'dessert', url: 'https://maps.google.com/?cid=2973674827365026041' },
     ]
   },
   {
@@ -115,12 +113,12 @@ const days = [
       { time: '9:30 AM', name: 'Rocky Steps — Philadelphia Museum of Art', note: 'Run the steps, get the iconic photo. Always free! 🏆📸', type: 'explore', url: 'https://maps.google.com/?cid=14887824939471611718' },
       { time: '10:00 AM', name: 'Boathouse Row', note: 'Beautiful Victorian boathouses on the Schuylkill — 5-10 min walk from Rocky Steps along Kelly Drive 🚣', type: 'explore', url: 'https://maps.google.com/?cid=4972583374919278636' },
       { time: '11:00 AM', name: "Philadelphia's Magic Gardens", note: 'Incredible mosaic art installation on South Street. Book tickets in advance! ~$10-15/person 🎨', type: 'explore', url: 'https://maps.google.com/?cid=7998075498390028587' },
-      { time: '12:00 PM', name: "Angelo's Pizzeria", note: "10 min walk from Magic Gardens. Order the cheesesteak(or chicken) — it'll change your life 🧀🥩. Cash only!", type: 'food', url: 'https://maps.google.com/?cid=2799461792011742256' },
+      { time: '12:00 PM', name: "Angelo's Pizzeria", note: "10 min walk from Magic Gardens. Order the cheesesteak (or chicken) — it'll change your life 🧀🥩. Cash only!", type: 'food', url: 'https://maps.google.com/?cid=2799461792011742256' },
       { time: '1:15 PM', name: 'Liberty Bell Center', note: 'Free entry! Bring ID for security 🔔', type: 'explore', url: 'https://maps.google.com/?cid=2282279327381655135' },
       { time: '2:00 PM', name: "Elfreth's Alley", note: "America's oldest residential street. Museum opens at 12pm, only $3 to enter 🏘️", type: 'explore', url: 'https://maps.google.com/?cid=9372751470809636750' },
       { time: '2:45 PM', name: 'Reading Terminal Market', note: "Browse, snack, grab Miller's Twist pretzels 🥨", type: 'food', url: 'https://maps.google.com/?cid=14812286431621114625' },
       { time: '3:30 PM', name: 'Chinatown', note: '2 min walk from Reading Terminal. Bubble tea, walk the arch, browse 🧋', type: 'explore', url: 'https://maps.google.com/?cid=351114119944824147' },
-      { time: '4:15 PM', name: 'LOVE STATUE — Love Park (JFK Plaza), note: 'Iconic Philly landmark with the famous LOVE sculpture — quick photo op, central location, and right next to City Hall.', type: 'explore', url: null },
+      { time: '4:15 PM', name: 'LOVE Statue — Love Park (JFK Plaza)', note: 'Iconic Philly landmark with the famous LOVE sculpture — quick photo op, central location, right next to City Hall.', type: 'explore', url: null },
       { time: '4:30 PM', name: 'Shopping — Chestnut & Walnut St', note: 'Stroll the strip — Uniqlo, Abercrombie, Old Navy, Urban Outfitters, Nike, New Balance and more 🛍️', type: 'explore', url: null },
       { time: '7:00 PM', name: 'Say goodbyes! 👋', note: 'Adios!', type: 'logistics', url: null },
     ]
